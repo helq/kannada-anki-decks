@@ -1,0 +1,62 @@
+<div id="root">
+  What is the sound
+
+  <table id="sounds">
+  <tr>
+    <td id='leftrecordings'></td>
+    <td id='rightrecordings'></td>
+  </tr>
+  <tr class="kannada">
+    <td><div class='big-font'>{{Word1}}<div></td>
+    <td><div class='big-font'>{{Word2}}<div></td>
+  </tr>
+  <tr class="ipa">
+    <td>{{IPA1}}</td>
+    <td>{{IPA2}}</td>
+  </tr>
+  <tr class="ipa">
+    <td>{{ISO1}}</td>
+    <td>{{ISO2}}</td>
+  </tr>
+  <tr class="iso">
+    <td>{{Sound1}}</td>
+    <td>{{Sound2}}</td>
+  </tr>
+  </table>
+
+  <hr/>
+
+  <div id="to-play"></div>
+  <div id="kannada-answer" class="kannada"></div>
+  <div id="text-answer-ipa" class="ipa"></div>
+  <div id="iso-answer" class="iso"></div>
+</div>
+
+<script src="../persistence.js"></script>
+<script src="../common.js"></script>
+<script>
+  checkPersistence(function main() {
+    let isItLeft = Persistence.getItem('is it left?');
+    let recordings = JSON.parse(Persistence.getItem('recordings'));
+
+    // Common to front and back cards
+    recordings.forEach( function(elem) {
+      document.getElementById("to-play").innerHTML += elem;
+    });
+
+    // writing answer
+    document.getElementById("kannada-answer").innerHTML = isItLeft ? '{{Word1}}' : '{{Word2}}';
+    document.getElementById("text-answer-ipa").innerHTML = isItLeft ? '{{IPA1}}' : '{{IPA2}}';
+    document.getElementById("iso-answer").innerHTML = isItLeft ? '{{Sound1}}' : '{{Sound2}}';
+
+    // complementary recordings
+    let otherRecordings =
+          isItLeft
+          ? getChunks( () => {/*EOL {{Recordings2}} EOL*/} )  // show right
+          : getChunks( () => {/*EOL {{Recordings1}} EOL*/} );  // show left
+    let recordingElem = document.getElementById(isItLeft ? "rightrecordings" : "leftrecordings");
+    otherRecordings.forEach( function(elem) {
+      recordingElem.innerHTML += elem;
+    });
+  });
+</script>

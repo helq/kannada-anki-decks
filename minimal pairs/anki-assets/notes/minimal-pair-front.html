@@ -1,0 +1,52 @@
+<div id="root">
+  What is the sound
+
+  <div id="to-play"></div>
+
+  <table id="sounds">
+  <tr class="kannada prompt">
+    <td><div class='big-font'>{{Word1}}<div></td>
+    <td><div class='big-font'>{{Word2}}<div></td>
+  </tr>
+  <tr class="ipa prompt">
+    <td><div class=ipa>{{IPA1}}</div></td>
+    <td><div class=ipa>{{IPA2}}</div></td>
+  </tr>
+  <tr class="iso prompt">
+    <td><div class=iso>{{Sound1}}</div></td>
+    <td><div class=iso>{{Sound2}}</div></td>
+  </tr>
+  </table>
+</div>
+
+  <br/>
+  {{Tip}}
+
+<script src="../persistence.js"></script>
+<script src="../common.js"></script>
+
+<script>
+  checkPersistence(function main() {
+    let max_sounds_shown = 3;
+
+    let isItLeft = Math.floor(Math.random() * 2) === 0;
+    let recordings =
+        isItLeft 
+        ? getChunks( () => {/*EOL {{Recordings1}} EOL*/} )
+        : getChunks( () => {/*EOL {{Recordings2}} EOL*/} );
+
+    shuffle(recordings);
+
+    // Common to front and back cards
+    recordings.forEach(function (elem) {
+      document.getElementById('to-play').innerHTML += elem;
+    });
+
+    // playing first audio
+    playAudio('to-play');
+
+    // Saving data
+    Persistence.setItem('recordings', JSON.stringify(recordings));
+    Persistence.setItem('is it left?', isItLeft);
+  });
+</script>
